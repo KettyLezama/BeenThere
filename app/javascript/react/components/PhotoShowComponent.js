@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react"
-import PhotoShow from "./PhotoShow"
+import React, { useState, useEffect } from "react";
 
-const PhotoShowContainer = (props) => {
-  const [getPhoto, setPhoto] = useState({
+const PhotoShowComponent = (props) => {
+  const [photo, setPhoto] = useState({
     location: "",
     url: "",
     share: "",
-    date: ""
+    date: "",
   });
 
   useEffect(() => {
@@ -23,19 +22,18 @@ const PhotoShowContainer = (props) => {
       })
       .then((response) => response.json())
       .then((body) => {
-        setPhoto(body)
+        setPhoto(body);
       })
       .catch((error) => console.error(`Error in fetch: ${error.message}`));
-  }, [])
+  }, []);
 
   return (
-    <PhotoShow
-    location = {photo.id}
-    url = {photo.url}
-    share = {photo.share}
-    date = {photo.date}
-    />
-  )
-}
+    <div>
+      <img src={photo.url}> </img>
+      <p>{photo.location}</p>
+      <p>{photo.date}</p>
+    </div>
+  );
+};
 
-export default PhotoShowContainer
+export default PhotoShowComponent;
