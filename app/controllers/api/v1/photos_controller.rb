@@ -4,6 +4,7 @@ class Api::V1::PhotosController < ApiController
   end
 
   def show
+    render json: Photo.find(params[:id])
   end
   
   def new
