@@ -9,7 +9,7 @@ const PhotoShowComponent = (props) => {
   });
 
   useEffect(() => {
-    let photoId = props.match.params.id;
+    let photoId = props.props.match.params.id;
     fetch(`/api/v1/photos/${photoId}`)
       .then((response) => {
         if (response.ok) {
@@ -29,7 +29,7 @@ const PhotoShowComponent = (props) => {
 
   return (
     <div>
-      <img src={photo.url}> </img>
+      <img src={photo.url} />
       <p>{photo.location}</p>
       <p>{photo.date}</p>
     </div>
