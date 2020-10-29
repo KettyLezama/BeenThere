@@ -1,12 +1,17 @@
 import React from 'react';
-import SharedPhotosIndexPage from './SharedPhotosIndexPage';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
+
+import LandingPage from './LandingPage';
+import CollectionContainer from '../containers/CollectionContainer';
 
 const App = (props) => {
   return (
-    <>
-      <h1>Testing Shared Photos Index Page</h1>
-      <SharedPhotosIndexPage />
-    </>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={LandingPage} />
+        <Route exact path="/photos/shared" component={CollectionContainer} />
+      </Switch>
+    </BrowserRouter>
   )
 }
 

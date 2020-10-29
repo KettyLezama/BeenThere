@@ -4,8 +4,7 @@ const PhotoTile = (props) => {
 
   return (
     <div>
-      <p>{props.name}</p>
-      <p>{props.description}</p>
+      <p>{props.imageUrl}</p>
     </div>
   )
 }
