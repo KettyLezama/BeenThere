@@ -1,7 +1,13 @@
-import React from 'react'
+import React from 'react';
+import SharedPhotosIndexPage from './SharedPhotosIndexPage';
 
-export const App = (props) => {
-  return (<h1>Make It So React</h1>)
+const App = (props) => {
+  return (
+    <>
+      <h1>Testing Shared Photos Index Page</h1>
+      <SharedPhotosIndexPage />
+    </>
+  )
 }
 
-export default App
+export default App;
