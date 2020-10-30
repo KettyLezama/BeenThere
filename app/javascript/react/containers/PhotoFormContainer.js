@@ -5,10 +5,13 @@ import { Redirect } from 'react-router-dom';
 
 const PhotoFormContainer = (props) => {
 	const [newPhoto, setNewPhoto] = useState({
+		name: '',
 		location: '',
+		camera: '',
 		url: '',
-		share: '',
+		shared: '',
 		date: '',
+		description: ''
 	});
 
 	const [errors, setErrors] = useState({});
@@ -47,10 +50,13 @@ const PhotoFormContainer = (props) => {
 	const clearbutton = (event) => {
 		event.preventDefault();
 		setNewPhoto({
+			name: '',
 			location: '',
+			camera: '',
 			url: '',
-			share: '',
+			shared: '',
 			date: '',
+			description: ''
 		});
 	};
 
@@ -90,6 +96,17 @@ const PhotoFormContainer = (props) => {
 			<form onSubmit={onSubmitHandler}>
 				<ErrorList errors={errors} />
 
+				<label htmlFor ="name">
+					<input
+						type="text"
+						value={newPhoto.name}
+						id="name"
+						name="name"
+            onChange={handleInputChange}
+            placeholder="Name"
+					/>
+				</label>
+
 				<label htmlFor ="location">
 					<input
 						type="text"
@@ -98,6 +115,17 @@ const PhotoFormContainer = (props) => {
 						name="location"
             onChange={handleInputChange}
             placeholder="Location"
+					/>
+				</label>
+
+				<label htmlFor ="camera">
+					<input
+						type="text"
+						value={newPhoto.camera}
+						id="camera"
+						name="camera"
+            onChange={handleInputChange}
+            placeholder="Camera"
 					/>
 				</label>
 
@@ -110,13 +138,13 @@ const PhotoFormContainer = (props) => {
             placeholder="URL"/>
 				</label>
 
-				<label htmlFor='share'>
+				<label htmlFor='shared'>
           <input type="text" 
-            value={newPhoto.share} 
-            id="share" 
-            name="share" 
+            value={newPhoto.shared} 
+            id="shared" 
+            name="shared" 
             onChange={handleInputChange} 
-            placeholder="Share?"/>
+            placeholder="Shared?"/>
 				</label>
 
 				<label htmlFor="date">
@@ -128,9 +156,18 @@ const PhotoFormContainer = (props) => {
             placeholder="Date"/>
 				</label>
 
+				<label htmlFor="description">
+				<input type="text" 
+					value={newPhoto.description} 
+					id="description" 
+					name="description" 
+					onChange={handleInputChange} 
+					placeholder="Description"/>
+			</label>
+
 				<div className="button-group">
 					<input className="button" type="submit" value="Submit" />
-					<input className="button" type="clear" value="Clear" />
+					<input onClick={clearbutton} className="button" type="clear" value="Clear" />
 				</div>
 			</form>
 		</div>
