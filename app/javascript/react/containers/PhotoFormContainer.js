@@ -1,115 +1,140 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import ErrorList from './ErrorList';
+import ErrorList from '../components/ErrorList';
+import { Redirect } from 'react-router-dom';
 
-const PhotoFormContainer = props => {
-  const [newPhoto, setNewPhoto] = useState({
-    location: "",
-    url: "",
-    share: "",
-    date: ""
-  })
+const PhotoFormContainer = (props) => {
+	const [newPhoto, setNewPhoto] = useState({
+		location: '',
+		url: '',
+		share: '',
+		date: '',
+	});
 
-  const [errors, setErrors] = useState({});
+	const [errors, setErrors] = useState({});
 
-  const handleChange = event => {
-    setNewPhoto({
-      ...newPhoto,
-      [event.currentTarget.name]: event.currentTarget.value,
-    })
-  }
+	const validForSubmission = () => {
+		let submitErrors = {};
+		const requiredFields = ['location', 'url', 'share', 'date'];
+		requiredFields.forEach((field) => {
+			if (newPhoto[field].trim() === '') {
+				submitErrors = {
+					...submitErrors,
+					[field]: 'is blank',
+				};
+			}
+		});
+		setErrors(submitErrors);
+		return _.isEmpty(submitErrors);
+	};
 
-  const onSubmit = event => {
-    event.preventDefault()
-    if (validForSubmission()) {
-      props.onSubmit(newPhoto);
-      setNewPhoto({
-        location: "",
-        url: "",
-        share: "",
-        date: ""
-      })
-    }
-  }
+	const [shouldRedirect, setShouldRedirect] = useState(false);
 
-  const validForSubmission = () => {
-    let submitErrors = {}
-    const requiredFields = ["location", "url", "share", "date"];
-    requiredFields.forEach((field) => {
-      if (newPhoto[field] === "") {
-        if (newPhoto[field].trim() === "") {
-          submitErrors = {
-            ...submitErrors,
-            [field]: "is blank",
-          }
-        }
-      }
-    })
-    setErrors(submitErrors)
-    return _.isEmpty(submitErrors)
-  }
+	const handleInputChange = (event) => {
+		setNewPhoto({
+			...newPhoto,
+			[event.currentTarget.name]: event.currentTarget.value,
+		});
+	};
 
-  const clearbutton = event => {
-    event.preventDefault()
-    setNewPhoto({
-      location: "",
-      url: "",
-      share: "",
-      date: ""
-    })
-  }
+	const onSubmitHandler = (event) => {
+		event.preventDefault();
+		if (validForSubmission()) {
+			addNewPhoto(newPhoto);
+		}
+	};
 
-  return (
-    <form className="new-photo-form callout" onSubmit={onSubmit}>
-      <ErrorList errors={errors} />
+	const clearbutton = (event) => {
+		event.preventDefault();
+		setNewPhoto({
+			location: '',
+			url: '',
+			share: '',
+			date: '',
+		});
+	};
 
-      <label>
-        Photo Location:
-          <input
-          type="text"
-          value={newPhoto.location}
-          id="location"
-          name="location"
-          onChange={handleChange}
-        />
-      </label>
+	const addNewPhoto = (formPayload) => {
+		fetch('/api/v1/photos', {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(formPayload),
+		})
+			.then((response) => {
+				if (response.ok) {
+					return response;
+				} else {
+					let errorMessage = `${response.status} (${response.statusText})`,
+						error = new Error(errorMessage);
+					throw error;
+				}
+			})
+			.then((response) => response.json())
+			.then((body) => {
+				setShouldRedirect(true);
+			})
+			.catch((error) => console.error(`Error in fetch: ${error.message}`));
+	};
 
-      <label>
-        Photo URL:
-          <input
-          type="text"
-          value={newPhoto.url}
-          id="url"
-          name="url"
-          onChange={handleChange}
-        />
-      </label>
+	if (shouldRedirect) {
+		return <Redirect to="/" />;
+	}
 
-      <label>
-        Photo share:
-          <input
-          type="text"
-          value={newPhoto.share}
-          id="share"
-          name="share"
-          onChange={handleChange}
-        />
-      </label>
+	return (
+		<div>
+			<h1>Add A New Photo</h1>
+			<form onSubmit={onSubmitHandler}>
+				<ErrorList errors={errors} />
 
-      <label>
-        Photo share:
-          <input
-          type="text"
-          value={newPhoto.date}
-          id="date"
-          name="date"
-          onChange={handleChange}
-        />
-      </label>
+				<label htmlFor ="location">
+					<input
+						type="text"
+						value={newPhoto.location}
+						id="location"
+						name="location"
+            onChange={handleInputChange}
+            placeholder="Location"
+					/>
+				</label>
 
-    </form>
+				<label htmlFor="url">
+          <input type="text" 
+            value={newPhoto.url} 
+            id="url" 
+            name="url" 
+            onChange={handleInputChange} 
+            placeholder="URL"/>
+				</label>
 
-  )
-}
+				<label htmlFor='share'>
+          <input type="text" 
+            value={newPhoto.share} 
+            id="share" 
+            name="share" 
+            onChange={handleInputChange} 
+            placeholder="Share?"/>
+				</label>
 
-export default PhotoFormContainer
+				<label htmlFor="date">
+          <input type="text" 
+            value={newPhoto.date} 
+            id="date" 
+            name="date" 
+            onChange={handleInputChange} 
+            placeholder="Date"/>
+				</label>
+
+				<div className="button-group">
+					<input className="button" type="submit" value="Submit" />
+					<input className="button" type="clear" value="Clear" />
+				</div>
+			</form>
+		</div>
+	);
+};
+
+export default PhotoFormContainer;
