@@ -18,7 +18,7 @@ const PhotoFormContainer = (props) => {
 
 	const validForSubmission = () => {
 		let submitErrors = {};
-		const requiredFields = ['location', 'url', 'share', 'date'];
+		const requiredFields = ['location', 'url', 'shared', 'date'];
 		requiredFields.forEach((field) => {
 			if (newPhoto[field].trim() === '') {
 				submitErrors = {
@@ -167,7 +167,7 @@ const PhotoFormContainer = (props) => {
 
 				<div className="button-group">
 					<input className="button" type="submit" value="Submit" />
-					<input onClick={clearbutton} className="button" type="clear" value="Clear" />
+					<input onClick={clearbutton} className="button" type="clear" defaultValue="Clear" />
 				</div>
 			</form>
 		</div>

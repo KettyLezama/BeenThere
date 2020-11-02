@@ -1,4 +1,6 @@
 class Api::V1::PhotosController < ApiController
+  protect_from_forgery unless: -> { request.format.json? }
+
   def index
     render json: Photo.all.where(shared: true)
   end
@@ -9,6 +11,8 @@ class Api::V1::PhotosController < ApiController
 
   def create
     new_photo = Photo.new(photo_params)
+    new_photo.user_id = current_user.id
+
     if new_photo.save
       render json: new_photo
     else
@@ -19,6 +23,6 @@ class Api::V1::PhotosController < ApiController
   private
 
   def photo_params
-    params.require(:photo).permit(:location, :url, :share, :date)
+    params.require(:photo).permit(:name, :location, :camera, :url, :shared, :date, :description)
   end
 end
