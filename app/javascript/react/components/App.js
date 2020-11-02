@@ -10,6 +10,7 @@ const App = (props) => {
       <Switch>
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/photos/shared/:id" component={CollectionContainer} />
+        {/* <Route exact path="/photos?shared" component={CollectionContainer} /> */}
       </Switch>
     </BrowserRouter>
   )
