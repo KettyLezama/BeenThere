@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import ErrorList from '../components/ErrorList';
 import { Redirect } from 'react-router-dom';
+import {useDropzone} from 'react-dropzone'
 
 const PhotoFormContainer = (props) => {
 	const [newPhoto, setNewPhoto] = useState({
@@ -93,6 +94,7 @@ const PhotoFormContainer = (props) => {
 	return (
 		<div>
 			<h1>Add A New Photo</h1>
+
 			<form onSubmit={onSubmitHandler}>
 				<ErrorList errors={errors} />
 
