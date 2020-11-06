@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import PhotoTile from './PhotoTile';
 
 const CollectionIndexComponent = (props) => {
-  const [sharedPhotos, setSharedPhotos] = useState([]);
+  const [photoCollection, setPhotoCollection] = useState([]);
+  let type = props.props.match.params.type;
   
   useEffect(() => {
-    fetch("/api/v1/photos")
+    fetch(`/api/v1/photos/collection/${type}`)
       .then((response) => {
         if (response.ok) {
           return response;
@@ -17,13 +18,13 @@ const CollectionIndexComponent = (props) => {
       })
       .then((response) => response.json())
       .then((body) => {
-        let sharedPhotos = body;
-        setSharedPhotos(sharedPhotos);
+        let photos = body.photoCollection;
+        setPhotoCollection(photos);
       })
       .catch((error) => console.error(`Error in fetch: ${error.message}`));
   }, []);
 
-  const sharedPhotosList = sharedPhotos.map((photo) => {
+  const photosList = photoCollection.map((photo) => {
     return (
       <PhotoTile
         key={photo.id}
@@ -34,8 +35,8 @@ const CollectionIndexComponent = (props) => {
 
   return (
     <>
-      <h1>Shared Photos</h1>
-      {sharedPhotosList}
+      <h1>Photos</h1>
+      {photosList}
     </>
   )
 }

@@ -2,9 +2,15 @@ class Api::V1::PhotosController < ApiController
   protect_from_forgery unless: -> { request.format.json? }
 
   def index
-    shared = Photo.all.where(shared: true)
-    personal = Photo.all.where(user_id: current_user.id)
-    render json: { sharedPhotos: shared, personalPhotos: personal }, each_serializer: PhotoSerializer
+    collection_type = params[:type]
+
+    if (collection_type == 'shared')
+      photos = Photo.all.where(shared: true)
+    elsif (collection_type == 'private')
+      photos = Photo.all.where(user_id: current_user.id)
+    end
+    
+    render json: { photoCollection: photos }, each_serializer: PhotoSerializer
   end
 
   def show
@@ -26,5 +32,5 @@ class Api::V1::PhotosController < ApiController
   def photo_params
     params.require(:photo).permit(:name, :location, :camera, :url, :shared, :date, :description)
   end
-  
+
 end
