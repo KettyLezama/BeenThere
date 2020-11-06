@@ -20,7 +20,7 @@ const PhotoFormContainer = (props) => {
 
 	const validForSubmission = () => {
 		let submitErrors = {};
-		const requiredFields = ['file', 'location', 'url', 'shared', 'date'];
+		const requiredFields = ['location', 'url', 'shared', 'date'];
 		requiredFields.forEach((field) => {
 			if (newPhoto[field].trim() === '') {
 				submitErrors = {
@@ -70,8 +70,7 @@ const PhotoFormContainer = (props) => {
 		})
 	}
 
-	const addNewPhoto = (formPayload) => {
-		formPayload.preventDefault()
+	const addNewPhoto = (event) => {
 		let body = new FormData()
 		body.append("name", newPhoto.name)
 		body.append("location", newPhoto.location)
@@ -80,11 +79,13 @@ const PhotoFormContainer = (props) => {
 		body.append("date", newPhoto.date)
 		body.append("description", newPhoto.description)
 		body.append("file", newPhoto.file)
+		debugger
 
 		fetch('/api/v1/photos', {
 			method: 'POST',
-			credentials: 'same-origin',
 			body: body,
+			credentials: 'same-origin',
+//			headers: {'Content-Type': 'application/json'}
 		})
 			.then((response) => {
 				if (response.ok) {
@@ -95,8 +96,8 @@ const PhotoFormContainer = (props) => {
 					throw error;
 				}
 			})
-			.then((response) => response.json())
-			.then((body) => {
+			.then(response => response.json())
+			.then(body => {
 				setShouldRedirect(true);
 			})
 			.catch((error) => console.error(`Error in fetch: ${error.message}`));
