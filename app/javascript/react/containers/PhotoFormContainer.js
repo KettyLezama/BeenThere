@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import ErrorList from '../components/ErrorList';
 import { Redirect } from 'react-router-dom';
-import {useDropzone} from 'react-dropzone'
+import Dropzone, {useDropzone} from 'react-dropzone'
 
 const PhotoFormContainer = (props) => {
 	const [newPhoto, setNewPhoto] = useState({
@@ -12,14 +12,15 @@ const PhotoFormContainer = (props) => {
 		url: '',
 		shared: '',
 		date: '',
-		description: ''
+		description: '',
+		file: ''
 	});
 
 	const [errors, setErrors] = useState({});
 
 	const validForSubmission = () => {
 		let submitErrors = {};
-		const requiredFields = ['location', 'url', 'shared', 'date'];
+		const requiredFields = ['file', 'location', 'url', 'shared', 'date'];
 		requiredFields.forEach((field) => {
 			if (newPhoto[field].trim() === '') {
 				submitErrors = {
@@ -57,19 +58,33 @@ const PhotoFormContainer = (props) => {
 			url: '',
 			shared: '',
 			date: '',
-			description: ''
+			description: '',
+			file: ''
 		});
 	};
 
+	const handleFileUpload = (acceptedFiles) => {
+		setNewPhoto({
+			...newPhoto,
+			file: acceptedFiles[0]
+		})
+	}
+
 	const addNewPhoto = (formPayload) => {
+		formPayload.preventDefault()
+		let body = new FormData()
+		body.append("name", newPhoto.name)
+		body.append("location", newPhoto.location)
+		body.append("url", newPhoto.url)
+		body.append("shared", newPhoto.shared)
+		body.append("date", newPhoto.date)
+		body.append("description", newPhoto.description)
+		body.append("file", newPhoto.file)
+
 		fetch('/api/v1/photos', {
 			method: 'POST',
 			credentials: 'same-origin',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(formPayload),
+			body: body,
 		})
 			.then((response) => {
 				if (response.ok) {
@@ -97,6 +112,17 @@ const PhotoFormContainer = (props) => {
 
 			<form onSubmit={onSubmitHandler}>
 				<ErrorList errors={errors} />
+
+				<Dropzone onDrop={handleFileUpload}>
+					{({getRootProps, getInputProps}) => (
+						<section>
+							<div {...getRootProps()}>
+								<input {...getInputProps()} />
+								<p>Drag 'n' drop some files here, or click to select files</p>					
+							</div>
+						</section>
+					)}
+					</Dropzone>
 
 				<label htmlFor ="name">
 					<input
