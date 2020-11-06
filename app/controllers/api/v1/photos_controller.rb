@@ -9,7 +9,7 @@ class Api::V1::PhotosController < ApiController
     elsif (collection_type == 'private')
       photos = Photo.all.where(user_id: current_user.id)
     end
-    
+
     render json: { photoCollection: photos }, each_serializer: PhotoSerializer
   end
 

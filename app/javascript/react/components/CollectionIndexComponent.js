@@ -6,7 +6,7 @@ const CollectionIndexComponent = (props) => {
   let type = props.props.match.params.type;
   
   useEffect(() => {
-    fetch(`/api/v1/photos/collection/${type}`)
+    fetch(`/api/v1/photos/${type}`)
       .then((response) => {
         if (response.ok) {
           return response;
