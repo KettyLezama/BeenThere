@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import ErrorList from '../components/ErrorList';
 import { Redirect } from 'react-router-dom';
+import Dropzone, {useDropzone} from 'react-dropzone'
 
 const PhotoFormContainer = (props) => {
 	const [newPhoto, setNewPhoto] = useState({
@@ -11,7 +12,8 @@ const PhotoFormContainer = (props) => {
 		url: '',
 		shared: '',
 		date: '',
-		description: ''
+		description: '',
+		file: ''
 	});
 
 	const [errors, setErrors] = useState({});
@@ -56,19 +58,33 @@ const PhotoFormContainer = (props) => {
 			url: '',
 			shared: '',
 			date: '',
-			description: ''
+			description: '',
+			file: ''
 		});
 	};
 
-	const addNewPhoto = (formPayload) => {
+	const handleFileUpload = (acceptedFiles) => {
+		setNewPhoto({
+			...newPhoto,
+			file: acceptedFiles[0]
+		})
+	}
+
+	const addNewPhoto = (event) => {
+		let body = new FormData()
+		body.append("name", newPhoto.name)
+		body.append("location", newPhoto.location)
+		body.append("url", newPhoto.url)
+		body.append("shared", newPhoto.shared)
+		body.append("date", newPhoto.date)
+		body.append("description", newPhoto.description)
+		body.append("file", newPhoto.file)
+
 		fetch('/api/v1/photos', {
 			method: 'POST',
+			body: body,
 			credentials: 'same-origin',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(formPayload),
+//			headers: {'Content-Type': 'application/json'}
 		})
 			.then((response) => {
 				if (response.ok) {
@@ -79,8 +95,8 @@ const PhotoFormContainer = (props) => {
 					throw error;
 				}
 			})
-			.then((response) => response.json())
-			.then((body) => {
+			.then(response => response.json())
+			.then(body => {
 				setShouldRedirect(true);
 			})
 			.catch((error) => console.error(`Error in fetch: ${error.message}`));
@@ -93,8 +109,20 @@ const PhotoFormContainer = (props) => {
 	return (
 		<div>
 			<h1>Add A New Photo</h1>
+
 			<form onSubmit={onSubmitHandler}>
 				<ErrorList errors={errors} />
+
+				<Dropzone onDrop={handleFileUpload}>
+					{({getRootProps, getInputProps}) => (
+						<section>
+							<div {...getRootProps()}>
+								<input {...getInputProps()} />
+								<p>Drag 'n' drop some files here, or click to select files</p>					
+							</div>
+						</section>
+					)}
+					</Dropzone>
 
 				<label htmlFor ="name">
 					<input

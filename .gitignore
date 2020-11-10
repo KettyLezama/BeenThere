@@ -12,6 +12,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/public/uploads
 
 
 /node_modules
@@ -28,3 +29,6 @@
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+
+# Ignore environment variables
+.env
