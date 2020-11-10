@@ -79,7 +79,6 @@ const PhotoFormContainer = (props) => {
 		body.append("date", newPhoto.date)
 		body.append("description", newPhoto.description)
 		body.append("file", newPhoto.file)
-		debugger
 
 		fetch('/api/v1/photos', {
 			method: 'POST',

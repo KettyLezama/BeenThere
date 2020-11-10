@@ -11,7 +11,8 @@ class Api::V1::PhotosController < ApiController
   end
 
   def create
-    binding.pry
+    # Beyond MVP: Receive array of file(s) and iterate through to create new Photo object for each file.
+
     new_photo = Photo.new(photo_params)
     new_photo.user_id = current_user.id
 
@@ -25,6 +26,6 @@ class Api::V1::PhotosController < ApiController
   private
 
   def photo_params
-    params.require(:photo).permit(:file, :name, :location, :camera, :url, :shared, :date, :description)
+    params.permit(:file, :name, :location, :camera, :url, :shared, :date, :description)
   end
 end

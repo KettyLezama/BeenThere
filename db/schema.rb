@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2020_11_05_230618) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "file", null: false
+    t.string "file"
     t.index ["user_id"], name: "index_photos_on_user_id"
   end
 
