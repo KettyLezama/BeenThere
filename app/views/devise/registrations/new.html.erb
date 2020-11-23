@@ -13,13 +13,12 @@
       </div>
 
       <div class="field">
-       
         <% if @minimum_password_length %>
-         <p class="label ">Password (<%= @minimum_password_length %> characters minimum)</p>
+         <label class="label">Password (<%= @minimum_password_length %> characters minimum)</label>
         <% else %>
          <%= f.label :password, :class=> "label" %>
         <% end %>
-        <%= f.password_field :password, autocomplete: "new-password" %>
+        <%= f.password_field :password, id: "Password", autocomplete: "new-password" %>
       </div>
 
       <div class="field">
